@@ -11,7 +11,7 @@
         <th>Harga</th>
         <th>Aksi</th>
     </tr>
-    @foreach ($products as $product)
+    @foreach ($products as $Product)
     <tr>
         <td>{{ $product->name }}</td>
         <td>{{ $product->price }}</td>
