@@ -1,161 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Nexus</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for a futuristic feel -->
+    <title>Pertemuan 1 - Game Ular Piksel</title>
+    <!-- Google Fonts untuk gaya retro/pixel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for the futuristic theme */
+        /* Gaya dasar halaman */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a1a; /* Deep space blue */
-            color: #e0e0ff;
-            background-image:
-                radial-gradient(circle at 10% 10%, #1a1a3a 1px, transparent 1px),
-                radial-gradient(circle at 80% 90%, #1a1a3a 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-color: #1a1a1a; /* Latar belakang gelap */
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
         }
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
+
+        /* Kontainer utama game */
+        .game-container {
+            border: 4px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
         }
-        .card-glow {
-            border: 1px solid #2a2a5a;
-            box-shadow: 0 0 15px rgba(76, 76, 255, 0.1);
-            transition: all 0.3s ease-in-out;
+
+        /* Judul */
+        h1 {
+            color: #00ff00; /* Hijau neon */
+            text-shadow: 2px 2px #ff00ff; /* Bayangan magenta */
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
-        .card-glow:hover {
-            border-color: #4a4aff;
-            box-shadow: 0 0 25px rgba(100, 100, 255, 0.4);
-            transform: translateY(-5px);
+
+        /* Tampilan Skor */
+        .score-display {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
         }
-        .btn-primary {
-            background: linear-gradient(90deg, #4f46e5, #c026d3);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
-            transition: all 0.3s ease;
+        
+        /* Kanvas tempat game berjalan */
+        #gameCanvas {
+            background-color: #000000;
+            border: 2px solid #00ff00;
+            box-shadow: inset 0 0 10px #00ff00;
         }
-        .btn-primary:hover {
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
-            transform: scale(1.05);
+
+        /* Pesan Game Over */
+        #gameOverText {
+            display: none; /* Sembunyikan secara default */
+            position: absolute;
+            color: #ff0000;
+            font-size: 2rem;
+            text-shadow: 2px 2px #fff;
+            z-index: 10;
         }
-        .btn-secondary {
-             background-color: rgba(42, 42, 90, 0.5);
-             border: 1px solid #2a2a5a;
-             transition: all 0.3s ease;
+
+        /* Tombol */
+        button {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #4a4a4a;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s ease;
         }
-        .btn-secondary:hover {
-            background-color: rgba(74, 74, 255, 0.5);
-            border-color: #4a4aff;
+
+        button:hover {
+            background-color: #00ff00;
+            color: #000;
+            border-color: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
         }
-        .btn-danger {
-            background-color: rgba(220, 38, 38, 0.2);
-            border: 1px solid #dc2626;
-            transition: all 0.3s ease;
-        }
-        .btn-danger:hover {
-            background-color: rgba(220, 38, 38, 0.5);
-            border-color: #ef4444;
-        }
-        .glassmorphism {
-            background: rgba(10, 10, 30, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .pagination-link {
-            background-color: rgba(42, 42, 90, 0.5);
-            border: 1px solid #2a2a5a;
-            transition: all 0.3s ease;
-        }
-        .pagination-link:hover, .pagination-link.active {
-            background-color: #4a4aff;
-            border-color: #8181ff;
-            color: #fff;
+
+        /* Petunjuk */
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #aaaaaa;
         }
     </style>
 </head>
-<body class="min-h-screen p-4 sm:p-6 lg:p-8">
+<body>
 
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
-            <h1 class="font-orbitron text-4xl font-bold text-cyan-300 tracking-widest uppercase mb-4 sm:mb-0">
-                Inventory Nexus
-            </h1>
-            <a href="{{-- route('products.create') --}}" class="btn-primary text-white font-bold py-2 px-6 rounded-lg inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>New Asset</span>
-            </a>
-        </header>
-
-        <!-- Success Message -->
-        @if ($message = Session::get('success'))
-            <div class="glassmorphism border border-green-500 text-green-300 px-4 py-3 rounded-lg relative mb-6 shadow-lg" role="alert">
-                <strong class="font-bold">System Alert:</strong>
-                <span class="block sm:inline">{{ $message }}</span>
-            </div>
-        @endif
-
-
-        <!-- Product Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {{-- @foreach ($products as $product) --}}
-            @php
-                // Dummy data for demonstration purposes. Remove this block in your Laravel project.
-                $products = [
-                    (object)['id' => 1, 'name' => 'Cybernetic Arm Model-7', 'price' => 12500.00],
-                    (object)['id' => 2, 'name' => 'Anti-Grav Boots', 'price' => 7800.50],
-                    (object)['id' => 3, 'name' => 'Holo-Projector v3', 'price' => 4200.00],
-                    (object)['id' => 4, 'name' => 'Plasma Rifle X-21', 'price' => 21000.75],
-                ];
-            @endphp
-            @foreach ($products as $product)
-            <div class="card-glow glassmorphism rounded-xl overflow-hidden p-5 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-bold text-cyan-300 truncate mb-2">{{ $product->name }}</h2>
-                    <p class="text-2xl font-orbitron text-fuchsia-400 mb-4">
-                        <span class="opacity-70">$</span>{{ number_format($product->price, 2) }}
-                    </p>
-                </div>
-                <!-- Action Buttons -->
-                <div class="mt-4">
-                     <form action="{{-- route('products.destroy', $product->id) --}}" method="POST" class="flex items-center gap-2">
-                        <a href="{{-- route('products.edit', $product->id) --}}" class="btn-secondary w-full text-center py-2 px-4 rounded-md text-sm font-semibold hover:text-white flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                            <span>Modify</span>
-                        </a>
-                        {{-- @csrf --}}
-                        {{-- @method('DELETE') --}}
-                        <button type="submit" class="btn-danger w-full py-2 px-4 rounded-md text-sm font-semibold hover:text-white flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                            <span>Delete</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endforeach
+    <div class="game-container">
+        <h1>Ular Piksel</h1>
+        <div class="score-display">SKOR: <span id="score">0</span></div>
+        <div style="position: relative; display: inline-block;">
+            <div id="gameOverText">GAME OVER</div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
         </div>
-
-        <!-- Pagination -->
-        <div class="mt-12 flex justify-center">
-             <nav class="flex items-center gap-2">
-                {{-- Example of what Laravel's pagination might render.
-                     This part should be replaced by: {{!! $products->links() !!}}
-                     You may need to publish and customize Laravel's pagination views
-                     to match this styling. --}}
-                <a href="#" class="pagination-link rounded-md px-3 py-1">&laquo;</a>
-                <a href="#" class="pagination-link rounded-md px-3 py-1">1</a>
-                <a href="#" class="pagination-link active rounded-md px-3 py-1">2</a>
-                <a href="#" class="pagination-link rounded-md px-3 py-1">3</a>
-                <a href="#" class="pagination-link rounded-md px-3 py-1">&raquo;</a>
-            </nav>
-        </div>
-
+        <button id="restartButton">Mulai Ulang</button>
+        <p class="instructions">Gunakan tombol panah untuk bergerak!</p>
     </div>
+
+    <script>
+        // Mengakses elemen dari HTML
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const restartButton = document.getElementById('restartButton');
+        const gameOverText = document.getElementById('gameOverText');
+
+        // Pengaturan Game
+        const gridSize = 20; // Ukuran setiap kotak di grid
+        const tileCount = canvas.width / gridSize;
+        let speed = 7; // Kecepatan game (frame per detik)
+
+        // Variabel Game
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 15, y: 15 };
+        let velocity = { x: 0, y: 0 };
+        let score = 0;
+        let isGameOver = false;
+
+        // Fungsi utama game loop
+        function gameLoop() {
+            if (isGameOver) return;
+
+            // Pindahkan ular
+            changeSnakePosition();
+
+            // Cek tabrakan
+            let result = checkCollisions();
+            if (result) {
+                gameOver();
+                return;
+            }
+
+            // Cek makan
+            checkEatFood();
+
+            // Gambar ulang semua elemen
+            draw();
+
+            // Atur loop berikutnya
+            setTimeout(gameLoop, 1000 / speed);
+        }
+
+        // Fungsi untuk mengakhiri game
+        function gameOver() {
+            isGameOver = true;
+            gameOverText.style.display = 'block';
+            // Posisikan teks "GAME OVER" di tengah canvas
+            const canvasRect = canvas.getBoundingClientRect();
+            gameOverText.style.left = canvasRect.left + (canvas.width - gameOverText.offsetWidth) / 2 + 'px';
+            gameOverText.style.top = canvasRect.top + (canvas.height - gameOverText.offsetHeight) / 2 + 'px';
+        }
+
+        // Fungsi untuk menggambar semua elemen di kanvas
+        function draw() {
+            // Latar belakang
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Ular
+            ctx.fillStyle = '#00ff00'; // Warna hijau neon
+            snake.forEach(part => {
+                ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            // Makanan
+            ctx.fillStyle = '#ff0000'; // Warna merah
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+            ctx.fillStyle = '#ff6666'; // Highlight makanan
+            ctx.fillRect(food.x * gridSize + 4, food.y * gridSize + 4, gridSize - 8, gridSize - 8);
+        }
+
+        // Memperbarui posisi ular
+        function changeSnakePosition() {
+            // Buat kepala baru berdasarkan kecepatan
+            const head = { x: snake[0].x + velocity.x, y: snake[0].y + velocity.y };
+            // Tambahkan kepala baru di depan
+            snake.unshift(head);
+            // Hapus ekor
+            snake.pop();
+        }
+
+        // Cek tabrakan dengan dinding atau diri sendiri
+        function checkCollisions() {
+            const head = snake[0];
+
+            // Tabrakan dinding
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                return true;
+            }
+
+            // Tabrakan diri sendiri
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Cek apakah ular memakan makanan
+        function checkEatFood() {
+            if (snake[0].x === food.x && snake[0].y === food.y) {
+                // Tambah skor dan perbarui tampilan
+                score++;
+                scoreElement.textContent = score;
+
+                // Tambah kecepatan setiap 5 poin
+                if(score % 5 === 0) {
+                    speed++;
+                }
+
+                // Tumbuhkan ular dengan menambahkan kembali ekor yang tadi dihapus
+                snake.push({ ...snake[snake.length - 1] });
+
+                // Pindahkan makanan ke posisi acak baru
+                generateFood();
+            }
+        }
+
+        // Membuat makanan di posisi acak
+        function generateFood() {
+            food.x = Math.floor(Math.random() * tileCount);
+            food.y = Math.floor(Math.random() * tileCount);
+
+            // Pastikan makanan tidak muncul di atas badan ular
+            snake.forEach(part => {
+                if (part.x === food.x && part.y === food.y) {
+                    generateFood(); // Coba lagi jika bertumpuk
+                }
+            });
+        }
+
+        // Event listener untuk input keyboard
+        document.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (velocity.y === 0) velocity = { x: 0, y: -1 };
+                    break;
+                case 'ArrowDown':
+                    if (velocity.y === 0) velocity = { x: 0, y: 1 };
+                    break;
+                case 'ArrowLeft':
+                    if (velocity.x === 0) velocity = { x: -1, y: 0 };
+                    break;
+                case 'ArrowRight':
+                    if (velocity.x === 0) velocity = { x: 1, y: 0 };
+                    break;
+            }
+        });
+
+        // Event listener untuk tombol restart
+        restartButton.addEventListener('click', () => {
+            // Reset semua variabel ke kondisi awal
+            snake = [{ x: 10, y: 10 }];
+            food = { x: 15, y: 15 };
+            velocity = { x: 0, y: 0 };
+            score = 0;
+            speed = 7;
+            scoreElement.textContent = 0;
+            isGameOver = false;
+            gameOverText.style.display = 'none';
+
+            // Mulai lagi game loop
+            gameLoop();
+        });
+        
+        // Memulai game untuk pertama kali
+        gameLoop();
+    </script>
 
 </body>
 </html>
