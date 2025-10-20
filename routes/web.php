@@ -31,3 +31,10 @@ Route::get('/yoyokularcobra', function () {
 Route::get('/navbar', function () {
     return view('navbar');
 });
+
+Route::get('/test-view-data', function() {
+    $nama = "yoyok";
+    $alamat = "tabanan";
+
+    return view('view_data', compact('nama', 'alamat'));
+});
