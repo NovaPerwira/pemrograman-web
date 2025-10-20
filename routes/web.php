@@ -23,3 +23,11 @@ Route::get('/', [ProductController::class, 'index'])->name('index');
 Route::get('/latihan2/{nama}', function($nama) {
     echo "nama saya adalah " . $nama;
 });
+
+Route::get('/yoyokularcobra', function () {
+    return view('yoyok');
+});
+
+Route::get('/navbar', function () {
+    return view('navbar');
+});
