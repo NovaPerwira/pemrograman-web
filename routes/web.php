@@ -3,8 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
+use App\Http\Controllers\NovaController;
 
-// Route ini akan menghasilkan URL seperti /products, /products/create, dll.
+
+Route::get('/nova/dashboard/{name}', [NovaController::class, 'index'])
+    ->where('name', '[A-Za-z\s-]+') // menerima Huruf, Spasi, dan Strip
+    ->name('nova.dashboard');
+
+
 
 Route::get('/', function() {
     return view('welcome');
